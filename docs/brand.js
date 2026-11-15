@@ -2,7 +2,7 @@ const pelufiSocial={
  handle:'@pelufiworld',
  profiles:[
   ['Instagram','https://www.instagram.com/pelufiworld/','<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>'],
-  ['Facebook','https://www.facebook.com/pelufiworld/','<path fill="currentColor" stroke="none" d="M14 22v-9h3l.5-3.5H14V7.3c0-1.1.3-1.8 1.9-1.8H18V2.3c-.7-.1-1.8-.3-3-.3-3.1 0-5 1.9-5 5.1v2.4H7V13h3v9z"/>'],
+  ['Facebook','https://www.facebook.com/profile.php?id=61596463297272','<path fill="currentColor" stroke="none" d="M14 22v-9h3l.5-3.5H14V7.3c0-1.1.3-1.8 1.9-1.8H18V2.3c-.7-.1-1.8-.3-3-.3-3.1 0-5 1.9-5 5.1v2.4H7V13h3v9z"/>'],
   ['TikTok','https://www.tiktok.com/@pelufiworld','<path d="M14 3v12a5 5 0 1 1-5-5m5-7c.8 4 3 6 7 6" stroke-width="3.6"/>']
  ],
  facebookShare:'https://www.facebook.com/sharer/sharer.php?u='
