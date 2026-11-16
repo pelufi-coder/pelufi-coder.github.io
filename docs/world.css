@@ -213,3 +213,147 @@
     max-height:135px;
   }
 }
+
+/* TOP SOCIAL STRIP — stronger visibility */
+.social-strip{
+  min-height:72px;
+  gap:18px;
+  padding:8px 18px;
+  font-size:18px;
+  font-weight:800;
+}
+
+.social-strip .strip-prompt{
+  font-weight:800;
+}
+
+.social-strip .network-links{
+  gap:12px;
+}
+
+.social-strip .network-links a{
+  min-height:52px;
+  padding:8px 12px;
+  font-size:18px;
+  font-weight:900;
+}
+
+.social-strip .network-links svg{
+  width:25px;
+  height:25px;
+}
+
+/* Keep the top strip strong but compact on phones */
+@media(max-width:620px){
+  .social-strip{
+    min-height:58px;
+    padding:6px 8px;
+    gap:6px;
+  }
+
+  .social-strip .network-links{
+    gap:4px;
+  }
+
+  .social-strip .network-links a{
+    min-height:46px;
+    padding:6px 8px;
+    font-size:14px;
+  }
+
+  .social-strip .network-links svg{
+    width:23px;
+    height:23px;
+  }
+}
+
+@media(max-width:430px){
+  .social-strip .network-links a{
+    min-width:46px;
+  }
+}
+
+/* TOP SOCIAL STRIP — XL visibility */
+.social-strip{
+  min-height:108px;
+  gap:28px;
+  padding:12px 24px;
+  font-size:26px;
+  font-weight:900;
+}
+
+.social-strip .strip-prompt{
+  font-size:26px;
+  font-weight:900;
+}
+
+.social-strip .network-links{
+  gap:20px;
+}
+
+.social-strip .network-links a{
+  min-height:72px;
+  padding:10px 16px;
+  font-size:26px;
+  font-weight:900;
+}
+
+.social-strip .network-links svg{
+  width:36px;
+  height:36px;
+}
+
+/* Mobile: still prominent, but compact enough */
+@media(max-width:620px){
+  .social-strip{
+    min-height:76px;
+    padding:8px 10px;
+    gap:8px;
+  }
+
+  .social-strip .network-links{
+    gap:5px;
+  }
+
+  .social-strip .network-links a{
+    min-height:54px;
+    padding:7px 9px;
+    font-size:16px;
+  }
+
+  .social-strip .network-links svg{
+    width:28px;
+    height:28px;
+  }
+}
+
+/* HEADER NAV — rebalance after larger social strip */
+.bar nav{
+  font-size:17px;
+}
+
+.lang select{
+  font-size:16px;
+}
+
+@media(max-width:620px){
+  .bar nav{
+    font-size:14px;
+  }
+
+  .lang select{
+    font-size:14px;
+  }
+}
+
+/* HEADER BRAND — rebalance with stronger social strip */
+.brand img{
+  width:140px;
+  height:auto;
+}
+
+@media(max-width:620px){
+  .brand img{
+    width:112px;
+  }
+}
