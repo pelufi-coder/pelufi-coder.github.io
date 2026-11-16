@@ -1,6 +1,6 @@
 /* One same-origin request, initiated only by confirming a completed result. */
 const quizAnalytics = {
-  sink: '/api/quiz-research',
+  sink: 'https://pelufi-codergithubio-production.up.railway.app/api/quiz-research',
 
   submit(state, language) {
     if (
