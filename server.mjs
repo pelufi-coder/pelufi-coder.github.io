@@ -27,6 +27,9 @@ import {
 
 import { runInNewContext } from 'node:vm';
 import { DatabaseSync } from 'node:sqlite';
+import {
+  handleResearchAdmin
+} from './research-dashboard.mjs';
 
 const root = dirname(
   fileURLToPath(import.meta.url)
@@ -449,6 +452,32 @@ export function createApp({
             (
               req.url || ''
             ).split('?')[0];
+
+            if (
+  route ===
+    '/admin/research' ||
+  route ===
+    '/admin/research.csv'
+) {
+  handleResearchAdmin({
+    req,
+    res,
+    route,
+
+    db:
+      database(),
+
+    adminUser:
+      process.env
+        .RESEARCH_ADMIN_USER,
+
+    adminPassword:
+      process.env
+        .RESEARCH_ADMIN_PASSWORD
+  });
+
+  return;
+ }
 
           if (
             route ===
