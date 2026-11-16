@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+﻿import assert from 'node:assert/strict';
 import {
   mkdtempSync,
   rmSync,
@@ -93,7 +93,7 @@ test(
           import.meta.url
         )
       ),
-      'public'
+      'docs'
     );
 
     for (

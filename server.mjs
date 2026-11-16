@@ -1,4 +1,5 @@
-import http from 'node:http';
+﻿import http from 'node:http';
+
 import {
   readFileSync,
   mkdirSync,
@@ -33,7 +34,7 @@ const root = dirname(
 
 const publicRoot = join(
   root,
-  'public'
+  'docs'
 );
 
 const context = {
@@ -458,43 +459,62 @@ export function createApp({
               'no-store'
             );
 
+            const origin =
+              req.headers.origin;
+
+            const allowedOrigin =
+              'https://pelufi.com';
+
+            if (
+              origin &&
+              origin !==
+                allowedOrigin
+            ) {
+              return finish(
+                403
+              );
+            }
+
+            if (
+              origin ===
+              allowedOrigin
+            ) {
+              res.setHeader(
+                'Access-Control-Allow-Origin',
+                allowedOrigin
+              );
+
+              res.setHeader(
+                'Vary',
+                'Origin'
+              );
+
+              res.setHeader(
+                'Access-Control-Allow-Methods',
+                'POST, OPTIONS'
+              );
+
+              res.setHeader(
+                'Access-Control-Allow-Headers',
+                'Content-Type'
+              );
+            }
+
+            if (
+              req.method ===
+              'OPTIONS'
+            ) {
+              return finish(
+                204
+              );
+            }
+
             if (
               req.method !==
               'POST'
             ) {
               return finish(
                 405
-              );
-            }
-
-            const origin =
-              req.headers.origin;
-
-            if (
-              origin &&
-              (
-                !/^https?:\/\//.test(
-                  origin
-                ) ||
-                new URL(
-                  origin
-                ).host !==
-                  req.headers.host
-              )
-            ) {
-              return finish(
-                403
-              );
-            }
-
-            if (
-              req.headers[
-                'sec-fetch-site'
-              ] ===
-              'cross-site'
-            ) {
-              return finish(
-                403
               );
             }
 
