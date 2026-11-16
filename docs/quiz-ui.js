@@ -1979,213 +1979,185 @@
     );
   }
 
-  async function makeCard(
-    id,
-    locale,
-    story = false
-  ) {
-    const [
-      hero,
-      brand,
-      mark
-    ] =
-      await Promise.all([
-        loadImage(
-          art(id, 'solo')
-        ),
-        loadImage(
-          '/assets/pelufi-master.webp'
-        ),
-        loadImage(
-          art(id, 'logo')
-        )
-      ]);
+  async function makeCard(id,locale,story=false) {
+    const [hero,brand,mark]=await Promise.all([
+      loadImage(art(id,'solo')),
+      loadImage('/assets/pelufi-master.webp'),
+      loadImage(art(id,'logo'))
+    ]);
 
-    if (
-      document.fonts
-    ) {
-      await Promise.all([
-        document.fonts.load(
-          '800 70px "Baloo 2"'
-        ),
-        document.fonts.load(
-          '700 32px Nunito'
-        )
-      ]);
+    if(document.fonts)await Promise.all([
+      document.fonts.load('800 70px "Baloo 2"'),
+      document.fonts.load('700 32px Nunito')
+    ]);
+
+    const c=document.createElement('canvas');
+    c.width=1080;
+    c.height=story?1920:1350;
+
+    const ctx=c.getContext('2d');
+    const accent=accents[id];
+    const traitLabels=data().traitNames?.[locale]||{};
+    const traitKeys=registry[id].traits||[];
+    const traits=traitKeys.slice(0,2).map(
+      key=>(traitLabels[key]||key).toLocaleUpperCase(locale)
+    );
+
+    const copy={
+      en:{
+        identity:'MY PELUFI IS',
+        challenge:'AND YOU — WHICH PELUFI ARE YOU?'
+      },
+      it:{
+        identity:'IL MIO PELUFI È',
+        challenge:'E TU, QUALE PELUFI SEI?'
+      },
+      es:{
+        identity:'MI PELUFI ES',
+        challenge:'¿Y TÚ, QUÉ PELUFI ERES?'
+      }
+    }[locale];
+
+    function roundedRect(x,y,w,h,r){
+      const radius=Math.min(r,w/2,h/2);
+      ctx.beginPath();
+      ctx.moveTo(x+radius,y);
+      ctx.arcTo(x+w,y,x+w,y+h,radius);
+      ctx.arcTo(x+w,y+h,x,y+h,radius);
+      ctx.arcTo(x,y+h,x,y,radius);
+      ctx.arcTo(x,y,x+w,y,radius);
+      ctx.closePath();
     }
 
-    const c =
-      document.createElement(
-        'canvas'
-      );
-
-    c.width = 1080;
-
-    c.height =
-      story
-        ? 1920
-        : 1350;
-
-    const ctx =
-      c.getContext('2d');
-
-    ctx.fillStyle =
-      '#fff6e9';
-
-    ctx.fillRect(
-      0,
-      0,
-      1080,
-      c.height
-    );
-
-    if (story) {
-      ctx.translate(
-        0,
-        180
-      );
+    function fitText(text,maxWidth,startSize,minSize=20,font='"Baloo 2", sans-serif'){
+      let size=startSize;
+      do{
+        ctx.font='800 '+size+'px '+font;
+        if(ctx.measureText(text).width<=maxWidth)break;
+        size-=2;
+      }while(size>minSize);
+      return size;
     }
 
-    ctx.fillStyle =
-      accents[id];
+    function pill(text,x,y,w,h){
+      ctx.fillStyle='#fffaf4';
+      ctx.strokeStyle='#542644';
+      ctx.lineWidth=3;
 
-    ctx.beginPath();
+      roundedRect(x,y,w,h,h/2);
+      ctx.fill();
+      ctx.stroke();
 
-    ctx.ellipse(
-      536,
-      705,
-      435,
-      440,
-      0,
-      0,
-      Math.PI * 2
-    );
+      ctx.fillStyle='#542644';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
 
-    ctx.fill();
-
-    fit(
-      ctx,
-      brand,
-      312,
-      12,
-      456,
-      170
-    );
-
-    ctx.fillStyle =
-      '#45223e';
-
-    ctx.textAlign =
-      'center';
-
-    ctx.font =
-      '800 62px "Baloo 2", sans-serif';
-
-    ctx.fillText(
-      {
-        en: 'I’m ',
-        es: 'Soy ',
-        it: 'Sono '
-      }[locale] +
-        nameOf(id) +
-        '.',
-      540,
-      231
-    );
-
-    fit(
-      ctx,
-      mark,
-      170,
-      254,
-      740,
-      160
-    );
-
-    fit(
-      ctx,
-      hero,
-      117,
-      420,
-      846,
-      story
-        ? 790
-        : 580
-    );
-
-    if (story) {
-      ctx.translate(
-        0,
-        210
+      const size=fitText(
+        text,
+        w-30,
+        27,
+        19,
+        'Nunito, sans-serif'
       );
+
+      ctx.font='800 '+size+'px Nunito, sans-serif';
+      ctx.fillText(text,x+w/2,y+h/2+1);
+
+      ctx.textBaseline='alphabetic';
     }
 
-    ctx.font =
-      '700 39px Nunito';
+    ctx.fillStyle='#fff6e9';
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.textAlign='center';
 
-    ctx.fillText(
-      registry[id]
-        .tagline[locale],
-      540,
-      1050,
-      960
-    );
+    const tagline=registry[id].tagline[locale];
 
-    ctx.font =
-      '800 42px ' +
-      String.fromCharCode(
-        34
-      ) +
-      'Baloo 2' +
-      String.fromCharCode(
-        34
-      );
+    if(story){
+      /* Instagram Story + TikTok — 1080 × 1920 */
 
-    ctx.fillText(
-      text[locale].title,
-      540,
-      1115,
-      980
-    );
+      fit(ctx,brand,355,100,370,145);
 
-    ctx.fillStyle =
-      '#542644';
+      ctx.fillStyle='#542644';
+      ctx.font='800 48px "Baloo 2", sans-serif';
+      ctx.fillText(copy.identity,540,312);
 
-    ctx.font =
-      '800 52px "Baloo 2", sans-serif';
+      fit(ctx,mark,145,340,790,155);
 
-    ctx.fillText(
-      'pelufi.com/quiz',
-      540,
-      1195
-    );
+      ctx.fillStyle=accent;
+      ctx.beginPath();
+      ctx.ellipse(540,920,410,445,0,0,Math.PI*2);
+      ctx.fill();
 
-    ctx.font =
-      '700 34px Nunito, sans-serif';
+      fit(ctx,hero,145,490,790,790);
 
-    ctx.fillText(
-      '@pelufiworld',
-      540,
-      1270
-    );
+      ctx.fillStyle='#542644';
+      ctx.font='700 '+
+        fitText(tagline,900,40,28,'Nunito, sans-serif')+
+        'px Nunito, sans-serif';
+      ctx.fillText(tagline,540,1395);
 
-    return new Promise(
-      (
-        resolve,
-        reject
-      ) =>
-        c.toBlob(
-          blob =>
-            blob
-              ? resolve(blob)
-              : reject(
-                  Error()
-                ),
-          'image/png'
-        )
+      if(traits[0])pill(traits[0],175,1450,345,68);
+      if(traits[1])pill(traits[1],560,1450,345,68);
+
+      ctx.fillStyle='#542644';
+      ctx.font='800 '+
+        fitText(copy.challenge,900,39,28)+
+        'px "Baloo 2", sans-serif';
+      ctx.fillText(copy.challenge,540,1605);
+
+      ctx.font='800 49px "Baloo 2", sans-serif';
+      ctx.fillText('pelufi.com/quiz',540,1685);
+
+      ctx.font='700 31px Nunito, sans-serif';
+      ctx.fillText('@pelufiworld',540,1755);
+
+    }else{
+      /* Instagram / Facebook Feed — 1080 × 1350 */
+
+      fit(ctx,brand,375,22,330,125);
+
+      ctx.fillStyle='#542644';
+      ctx.font='800 43px "Baloo 2", sans-serif';
+      ctx.fillText(copy.identity,540,190);
+
+      fit(ctx,mark,170,215,740,140);
+
+      ctx.fillStyle=accent;
+      ctx.beginPath();
+      ctx.ellipse(540,690,380,375,0,0,Math.PI*2);
+      ctx.fill();
+
+      fit(ctx,hero,175,355,730,590);
+
+      ctx.fillStyle='#542644';
+      ctx.font='700 '+
+        fitText(tagline,850,36,26,'Nunito, sans-serif')+
+        'px Nunito, sans-serif';
+      ctx.fillText(tagline,540,995);
+
+      if(traits[0])pill(traits[0],180,1030,335,62);
+      if(traits[1])pill(traits[1],565,1030,335,62);
+
+      ctx.fillStyle='#542644';
+      ctx.font='800 '+
+        fitText(copy.challenge,900,35,26)+
+        'px "Baloo 2", sans-serif';
+      ctx.fillText(copy.challenge,540,1150);
+
+      ctx.font='800 45px "Baloo 2", sans-serif';
+      ctx.fillText('pelufi.com/quiz',540,1215);
+
+      ctx.font='700 27px Nunito, sans-serif';
+      ctx.fillText('@pelufiworld',540,1270);
+    }
+
+    return new Promise((resolve,reject)=>
+      c.toBlob(
+        blob=>blob?resolve(blob):reject(Error()),
+        'image/png'
+      )
     );
   }
-
   function result(info) {
     const id =
       state.match;
@@ -2339,6 +2311,7 @@
     }
 
     prepare('story');
+    prepare('feed');
 
     async function save(
       kind
@@ -2427,26 +2400,64 @@
             name ===
             'Facebook'
           ) {
+            const blob =
+              await prepare(
+                'feed'
+              );
+
             if (
+              blob &&
+              typeof File ===
+                'function' &&
               navigator.share
             ) {
-              try {
-                await navigator.share(
+              const file =
+                new File(
+                  [
+                    blob
+                  ],
+                  'PELUFI-' +
+                    id +
+                    '-' +
+                    locale +
+                    '-feed.png',
                   {
-                    title:
-                      t()
-                        .shareTitle,
-                    url
+                    type:
+                      'image/png'
                   }
                 );
 
-                return;
-              } catch (e) {
-                if (
-                  e.name ===
-                  'AbortError'
-                ) {
+              if (
+                navigator.canShare?.(
+                  {
+                    files: [
+                      file
+                    ]
+                  }
+                )
+              ) {
+                try {
+                  await navigator.share(
+                    {
+                      files: [
+                        file
+                      ],
+                      title:
+                        t()
+                          .shareTitle,
+                      text:
+                        url
+                    }
+                  );
+
                   return;
+                } catch (e) {
+                  if (
+                    e.name ===
+                    'AbortError'
+                  ) {
+                    return;
+                  }
                 }
               }
             }
@@ -2475,7 +2486,6 @@
 
             return;
           }
-
           if (
             cards.story &&
             typeof File ===
